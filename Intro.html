@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Internboat</title>
+    <style>
+        body {
+            font-family: 'Consolas', monospace; /* A common coding font */
+            margin: 20px;
+            line-height: 1.6;
+            color: #d4d4d4; /* Typical VS Code foreground */
+            background-color: #1e1e1e; /* Dark VS Code background */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #252526; /* Slightly lighter background for contrast */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer stays at the bottom */
+        }
+        h1, h2 {
+            color: #569cd6; /* Blue for headings */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .intro-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .intro-section img {
+            max-width: 150px; /* Slightly smaller logo */
+            height: auto;
+            border-radius: 0%; /* Removed oval shape */
+            display: block;
+            margin: 20px auto;
+            border: none; /* Removed blue outline */
+        }
+        p {
+            color: #d4d4d4;
+        }
+        .section {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .section:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .section-text {
+            flex: 1;
+        }
+        .section-image {
+            flex: 1;
+            text-align: center;
+        }
+        .section-image img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #3a3a3b; /* Subtle border for images */
+        }
+        .highlight {
+            font-weight: bold;
+            color: #dcdcaa; /* Yellow/gold for emphasis */
+        }
+        .comment {
+            color: #6a9955; /* Green for comments */
+            font-style: italic;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007acc; /* VS Code blue for buttons */
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #005696;
+        }
+        .text-center {
+            text-align: center;
+        }
+        /* Added font for code-like feel */
+        @import url('https://fonts.googleapis.com/css2?family=Consolas&display=swap');
+
+        /* Footer styles */
+        .footer {
+            margin-top: auto; /* Push footer to the bottom */
+            padding: 20px 0;
+            text-align: center;
+            color: #9cdcfe; /* Light blue/gray for footer text */
+            font-size: 0.9em;
+            border-top: 1px solid #3a3a3b; /* Subtle top border */
+        }
+
+        .footer a {
+            color: #c586c0; /* Pink/purple for links */
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .separator {
+            margin: 0 10px;
+            color: #6a9955; /* Green for separators */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="intro-section">
+            <img src="logo.png" alt="Internboat Logo">
+            <h1>Launch Your Tech Journey with Internboat</h1>
+            <p class="comment">// Your simple path to mastering in-demand programming skills.</p>
+        </header>
+
+        <section class="section">
+            <div class="section-text">
+                <h2>Unlock Essential Skills</h2>
+                <p>Internboat offers focused courses in key programming areas like <span class="highlight">Python</span>, <span class="highlight">C++</span>, and <span class="highlight">Web Development</span>. Learn the fundamentals and gain practical skills you can actually use.</p>
+                <a href="boat.html" class="button" target="_blank">Explore Courses</a>
+            </div>
+            <div class="section-image">
+                <img src="skills.jpg" alt="Skills Illustration">
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-image">
+                <img src="learning.jpg" alt="Learning Illustration">
+            </div>
+            <div class="section-text">
+                <h2>Learn at Your Own Pace</h2>
+                <p>Our courses are designed to be flexible, allowing you to learn at your own speed. Access engaging materials and practical exercises that fit your schedule.</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="terms.html">Terms & Conditions</a>
+            <span class="separator">|</span>
+            <a href="privacy.html">Privacy Policy</a>
+            <span class="separator">|</span>
+            <a href="contact.html">Contact Us</a>
+            <p>&copy; 2025 Internboat. All Rights Reserved.</p>
+            <p>Meerut, Uttar Pradesh, India</p>
+        </footer>
+    </div>
+</body>
+</html>
