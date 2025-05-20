@@ -4,37 +4,41 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const port = 3000;
+// Use process.env.PORT for deployment, fallback to 3000 for local development
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// Serve static files (though we'll use absolute path for the main file)
-const staticPath = path.join(__dirname, '..');
-app.use(express.static(staticPath));
+// Serve static files from the root of your project
+app.use(express.static(path.join(__dirname, '..')));
 
-// Handle the GET request to the root path ('/') using an absolute path
-app.get('/', (req, res) => {
-    res.sendFile('register.html', { root: staticPath });
-});
+// Ensure the registrations.log file exists
+const logFilePath = path.join(__dirname, 'registrations.log');
+if (!fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, '', 'utf8');
+}
 
 app.post('/register', (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
+    const { name, email } = req.body;
 
-    console.log(`Received registration data - Name: ${name}, Email: ${email}`);
+    if (!name || !email) {
+        return res.status(400).send('Name and Email are required.');
+    }
 
     const registrationData = `Name: ${name}, Email: ${email}\n`;
-    fs.appendFile(path.join(__dirname, 'registrations.log'), registrationData, (err) => {
+
+    fs.appendFile(logFilePath, registrationData, (err) => {
         if (err) {
-            console.error('Error saving registration:', err);
-            res.status(500).send('Error saving registration data.');
-        } else {
-            console.log('Registration data saved to registrations.log');
-            res.send('Registration successful!');
+            console.error('Error writing to log file:', err);
+            return res.status(500).send('Internal Server Error.');
         }
+        console.log(`Registration successful: Name: ${name}, Email: ${email}`);
+        // Redirect back to the registration form or a success page
+        res.redirect('/register.html?success=true');
     });
 });
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
