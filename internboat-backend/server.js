@@ -1,35 +1,58 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const path = require('path');
+const path = require('path'); // Make sure path is required
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.urlencoded({ extended: true })); // Use extended:true, as discussed
-app.use(bodyParser.json()); // Add this for good measure if you ever send JSON
+// Middleware order matters!
+// Parse URL-encoded bodies (for form data)
+app.use(bodyParser.urlencoded({ extended: true }));
+// Parse JSON bodies (good practice, might not be needed for your current forms)
+app.use(bodyParser.json());
 
-// Define the absolute path to the project root for serving static files
-const projectRoot = path.join(__dirname, '..');
-app.use(express.static(projectRoot)); // Serve static files from the project root
+// Define the base directory for your static files.
+// '__dirname' is '/opt/render/project/src/internboat-backend' on Render
+// 'path.join(__dirname, '..')' resolves to '/opt/render/project/src/' (your repo root)
+const pathToStaticFiles = path.join(__dirname, '..');
 
-// --- IMPORTANT CHANGE HERE ---
-// Handle the GET request to the root path ('/')
+// Serve your main landing page (intro.html) for the root URL explicitly
 app.get('/', (req, res) => {
-    // We want to serve intro.html as the landing page
-    res.sendFile(path.join(projectRoot, 'intro.html'));
+    console.log('GET / request received. Sending intro.html');
+    res.sendFile(path.join(pathToStaticFiles, 'intro.html'), (err) => {
+        if (err) {
+            console.error('Error sending intro.html:', err);
+            res.status(500).send('<h1>Error loading page.</h1><p>Please try again later.</p>');
+        }
+    });
 });
 
-// Ensure the registrations.log file exists (optional, but good for first run)
+// After the specific root route, serve all other static files.
+// This allows requests like /boat.html, /register.html, /logo.png etc.
+app.use(express.static(pathToStaticFiles));
+
+// Ensure the registrations.log file exists (important for initial deployments)
 const logFilePath = path.join(__dirname, 'registrations.log');
+// Check if the file exists. If not, create it synchronously.
 if (!fs.existsSync(logFilePath)) {
-    fs.writeFileSync(logFilePath, '', 'utf8');
+    try {
+        fs.writeFileSync(logFilePath, '', 'utf8');
+        console.log('registrations.log created successfully.');
+    } catch (createErr) {
+        console.error('Failed to create registrations.log:', createErr);
+        // Depending on importance, you might want to exit or log a critical error
+    }
+} else {
+    console.log('registrations.log already exists.');
 }
 
+// Handle POST requests for registration
 app.post('/register', (req, res) => {
     const { name, email } = req.body;
 
     if (!name || !email) {
+        console.warn('Registration attempt with missing name or email.');
         return res.status(400).send('Name and Email are required.');
     }
 
@@ -41,14 +64,12 @@ app.post('/register', (req, res) => {
             return res.status(500).send('Internal Server Error.');
         }
         console.log(`Registration successful: Name: ${name}, Email: ${email}`);
-        // You might want to redirect to a confirmation page or back to intro.html
-        // For now, let's redirect to a simple success message or the intro page
+        // Send a success message, you can later redirect to a dedicated success page
         res.send('<h1>Registration Successful!</h1><p>Thank you for registering. You can go back to the <a href="/">home page</a>.</p>');
-        // Or if you want to redirect to the intro page:
-        // res.redirect('/');
     });
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
