@@ -1,23 +1,49 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path'); // Make sure path is required
+const path = require('path');
+const { Client } = require('pg'); // <-- ADD THIS for PostgreSQL client
+require('dotenv').config(); // <-- ADD THIS for local .env file
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware order matters!
-// Parse URL-encoded bodies (for form data)
+// --- PostgreSQL Connection ---
+// Use an environment variable for your PostgreSQL URI.
+// For local testing, ensure your .env file has DATABASE_URL.
+// For Render deployment, you will set this as an environment variable on Render.
+const DATABASE_URL = process.env.DATABASE_URL;
+
+// Create a new pg Client instance
+const client = new Client({
+    connectionString: DATABASE_URL,
+    ssl: { // Required for Render's PostgreSQL connection
+        rejectUnauthorized: false
+    }
+});
+
+// Connect to the database
+client.connect()
+    .then(() => {
+        console.log('PostgreSQL connected successfully!');
+        // Create a table if it doesn't exist
+        return client.query(`
+            CREATE TABLE IF NOT EXISTS registrations (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+    })
+    .then(() => console.log('Registrations table checked/created.'))
+    .catch(err => console.error('PostgreSQL connection or table creation error:', err));
+// --------------------------
+
 app.use(bodyParser.urlencoded({ extended: true }));
-// Parse JSON bodies (good practice, might not be needed for your current forms)
 app.use(bodyParser.json());
 
-// Define the base directory for your static files.
-// '__dirname' is '/opt/render/project/src/internboat-backend' on Render
-// 'path.join(__dirname, '..')' resolves to '/opt/render/project/src/' (your repo root)
 const pathToStaticFiles = path.join(__dirname, '..');
 
-// Serve your main landing page (intro.html) for the root URL explicitly
 app.get('/', (req, res) => {
     console.log('GET / request received. Sending intro.html');
     res.sendFile(path.join(pathToStaticFiles, 'intro.html'), (err) => {
@@ -28,27 +54,12 @@ app.get('/', (req, res) => {
     });
 });
 
-// After the specific root route, serve all other static files.
-// This allows requests like /boat.html, /register.html, /logo.png etc.
 app.use(express.static(pathToStaticFiles));
 
-// Ensure the registrations.log file exists (important for initial deployments)
-const logFilePath = path.join(__dirname, 'registrations.log');
-// Check if the file exists. If not, create it synchronously.
-if (!fs.existsSync(logFilePath)) {
-    try {
-        fs.writeFileSync(logFilePath, '', 'utf8');
-        console.log('registrations.log created successfully.');
-    } catch (createErr) {
-        console.error('Failed to create registrations.log:', createErr);
-        // Depending on importance, you might want to exit or log a critical error
-    }
-} else {
-    console.log('registrations.log already exists.');
-}
+// Remove any fs.appendFile or fs.existsSync related to registrations.log
+// as data will now be stored in the database.
 
-// Handle POST requests for registration
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => { // Made function async
     const { name, email } = req.body;
 
     if (!name || !email) {
@@ -56,20 +67,48 @@ app.post('/register', (req, res) => {
         return res.status(400).send('Name and Email are required.');
     }
 
-    const registrationData = `Name: ${name}, Email: ${email}\n`;
+    try {
+        const query = `
+            INSERT INTO registrations(name, email)
+            VALUES($1, $2)
+            ON CONFLICT (email) DO NOTHING
+            RETURNING *;
+        `; // ON CONFLICT DO NOTHING will prevent duplicate emails if email is UNIQUE
+        const values = [name, email];
 
-    fs.appendFile(logFilePath, registrationData, (err) => {
-        if (err) {
-            console.error('Error writing to log file:', err);
-            return res.status(500).send('Internal Server Error.');
+        const result = await client.query(query, values); // <-- Store in DB
+
+        if (result.rowCount > 0) {
+            console.log(`Registration successful: Name: ${name}, Email: ${email}`);
+            res.send('<h1>Registration Successful!</h1><p>Thank you for registering. You can go back to the <a href="/">home page</a>.</p>');
+        } else {
+            console.warn(`Attempt to register duplicate email: ${email}`);
+            res.status(409).send('Email already registered.'); // 409 Conflict for duplicate
         }
-        console.log(`Registration successful: Name: ${name}, Email: ${email}`);
-        // Send a success message, you can later redirect to a dedicated success page
-        res.send('<h1>Registration Successful!</h1><p>Thank you for registering. You can go back to the <a href="/">home page</a>.</p>');
-    });
+
+    } catch (error) {
+        console.error('Error saving registration to database:', error);
+        res.status(500).send('Internal Server Error during registration.');
+    }
 });
 
-// Start the server
+// Add a simple route to view registrations (for testing/learning)
+app.get('/view-registrations', async (req, res) => {
+    try {
+        const result = await client.query('SELECT * FROM registrations ORDER BY registered_at DESC;');
+        let html = '<h1>All Registrations</h1><ul>';
+        result.rows.forEach(reg => {
+            html += `<li>Name: ${reg.name}, Email: ${reg.email}, Registered: ${reg.registered_at}</li>`;
+        });
+        html += '</ul><p><a href="/">Back to Home</a></p>';
+        res.send(html);
+    } catch (error) {
+        console.error('Error fetching registrations:', error);
+        res.status(500).send('Error fetching registrations from database.');
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
