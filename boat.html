@@ -186,11 +186,12 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            /* No specific padding needed on body as universal reset is in place */
             .container {
-                padding: 20px; /* Adjusted padding for mobile */
-                max-width: 100%; /* Explicitly ensure max-width doesn't restrict it */
-                width: 100%; /* Ensure it takes full width */
+                /* New calculated width: 100% of parent minus total horizontal padding */
+                width: calc(100% - 40px); /* 20px left + 20px right padding = 40px */
+                max-width: none; /* Remove max-width constraint for mobile */
+                margin: 0 auto; /* Explicitly center for mobile */
+                padding: 20px; /* Consistent padding for mobile */
                 min-height: 100vh; /* Stretch to full height on mobile */
                 border-radius: 0; /* Optional: Make container full width and height on mobile for seamless look */
                 box-shadow: none; /* Optional: Remove box shadow on mobile for a cleaner look */
