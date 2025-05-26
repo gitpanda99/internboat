@@ -6,9 +6,18 @@
     <title>Internboat - Our Courses</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Universal Box-Sizing for consistent sizing across all elements */
+        /* Universal Reset: Ensure consistent box-sizing and remove default margins/paddings */
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Ensure HTML and Body take full viewport dimensions */
+        html, body {
+            width: 100%; /* Changed from 100vw for better cross-browser compatibility and scrollbar handling */
+            height: 100%; /* Ensure full height */
+            overflow-x: hidden; /* Still good for preventing horizontal scroll */
         }
 
         :root {
@@ -29,34 +38,26 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0; /* Remove default body margin */
-            /* REMOVED: padding: 20px; from body. Container will handle spacing. */
             background-color: var(--bg-dark);
             color: var(--text-light);
-            display: flex; /* Keep flex for centering */
-            justify-content: center; /* Keep for horizontal centering */
-            align-items: flex-start; /* Changed to flex-start to allow content to align top if container is very tall */
-            min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            width: 100vw; /* Ensure body takes full viewport width */
-        }
-
-        html {
-            overflow-x: hidden; /* Prevent horizontal scroll on html */
-            width: 100vw; /* Ensure html also takes full viewport width */
+            display: flex;
+            justify-content: center; /* This centers the container horizontally */
+            align-items: flex-start; /* Align content to the top */
+            min-height: 100vh; /* Ensure body is at least viewport height */
+            /* Removed explicit width: 100vw; here as html, body { width: 100%; } handles it */
         }
 
         .container {
-            max-width: 1000px;
-            width: 100%; /* Ensure it takes 100% of its parent's available width */
-            margin: 0 auto; /* Centers the container within the body's full width */
-            padding: 40px; /* Internal padding for the container */
+            max-width: 1000px; /* Max width for larger screens */
+            width: 100%; /* Default to 100% of parent's width */
+            margin: 0 auto; /* Centers the container within the body */
+            padding: 40px; /* Default internal padding for larger screens */
             background-color: var(--bg-medium);
             box-shadow: 0 10px 30px var(--shadow-strong);
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 40px); /* Adjust based on new container padding */
+            min-height: calc(100vh - 40px); /* Adjust based on container padding */
         }
 
         header {
@@ -185,12 +186,12 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            body {
-                padding: 0; /* Remove body padding on mobile to give container full width */
-            }
+            /* No specific padding needed on body as universal reset is in place */
             .container {
-                padding: 20px; /* Adjusted padding for mobile to be less but still provide spacing */
-                min-height: 100vh; /* Changed to 100vh, removing calc as body padding is gone */
+                padding: 20px; /* Adjusted padding for mobile */
+                max-width: 100%; /* Explicitly ensure max-width doesn't restrict it */
+                width: 100%; /* Ensure it takes full width */
+                min-height: 100vh; /* Stretch to full height on mobile */
                 border-radius: 0; /* Optional: Make container full width and height on mobile for seamless look */
                 box-shadow: none; /* Optional: Remove box shadow on mobile for a cleaner look */
             }
