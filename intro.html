@@ -3,117 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover Internboat</title>
+    <title>Discover Internboat - Launch Your Tech Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Consolas', monospace; /* A common coding font */
-            margin: 20px;
-            line-height: 1.6;
-            color: #d4d4d4; /* Typical VS Code foreground */
-            background-color: #1e1e1e; /* Dark VS Code background */
+        :root {
+            --bg-dark: #1a1a2e; /* Deep Space Blue */
+            --bg-medium: #16213e; /* Darker Blue */
+            --text-light: #e0e0e0; /* Off-white */
+            --text-accent: #0f3460; /* Muted Blue */
+            --highlight-blue: #007bff; /* Standard Blue */
+            --highlight-green: #28a745; /* Standard Green */
+            --gradient-start: #007bff; /* Blue */
+            --gradient-end: #6f42c1; /* Purple */
+            --border-color: rgba(255, 255, 255, 0.1);
         }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            color: var(--text-light);
+            background-color: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #252526; /* Slightly lighter background for contrast */
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            background-color: var(--bg-medium);
+            padding: 40px;
+            border-radius: 15px; /* More rounded */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow */
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Ensure footer stays at the bottom */
+            min-height: calc(100vh - 40px); /* Adjust for padding */
         }
+
         h1, h2 {
-            color: #569cd6; /* Blue for headings */
+            color: var(--highlight-blue);
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
         .intro-section {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
+
         .intro-section img {
-            max-width: 150px; /* Slightly smaller logo */
+            max-width: 180px; /* Slightly larger logo */
             height: auto;
-            border-radius: 0%; /* Removed oval shape */
+            border-radius: 50%; /* Circular logo */
             display: block;
-            margin: 20px auto;
-            border: none; /* Removed blue outline */
+            margin: 0 auto 25px auto;
+            border: 3px solid var(--highlight-blue); /* Subtle blue border */
+            transition: transform 0.3s ease;
         }
+
+        .intro-section img:hover {
+            transform: scale(1.05);
+        }
+
         p {
-            color: #d4d4d4;
+            color: var(--text-light);
+            font-weight: 300;
         }
+
+        .comment {
+            color: var(--text-accent); /* Muted blue for comments */
+            font-style: italic;
+            font-size: 0.95em;
+            margin-top: -15px;
+        }
+
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 50px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle background for sections */
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
         .section:nth-child(even) {
             flex-direction: row-reverse;
         }
+
         .section-text {
             flex: 1;
         }
+
         .section-image {
             flex: 1;
             text-align: center;
         }
+
         .section-image img {
-            max-width: 80%;
+            max-width: 90%;
             height: auto;
-            border-radius: 6px;
-            border: 1px solid #3a3a3b; /* Subtle border for images */
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
         }
+
+        .section-image img:hover {
+            transform: scale(1.02);
+        }
+
         .highlight {
-            font-weight: bold;
-            color: #dcdcaa; /* Yellow/gold for emphasis */
+            font-weight: 600;
+            color: var(--highlight-green); /* Green for emphasis */
         }
-        .comment {
-            color: #6a9955; /* Green for comments */
-            font-style: italic;
-        }
+
         .button {
             display: inline-block;
-            background-color: #007acc; /* VS Code blue for buttons */
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
             color: white;
-            padding: 10px 20px;
+            padding: 12px 28px;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
+            border-radius: 30px; /* Pill shape */
+            font-weight: 600;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
         }
+
         .button:hover {
-            background-color: #005696;
+            background: linear-gradient(45deg, var(--gradient-end), var(--gradient-start));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
+
         .text-center {
             text-align: center;
         }
-        /* Added font for code-like feel */
-        @import url('https://fonts.googleapis.com/css2?family=Consolas&display=swap');
 
         /* Footer styles */
         .footer {
             margin-top: auto; /* Push footer to the bottom */
-            padding: 20px 0;
+            padding: 25px 0 15px;
             text-align: center;
-            color: #9cdcfe; /* Light blue/gray for footer text */
-            font-size: 0.9em;
-            border-top: 1px solid #3a3a3b; /* Subtle top border */
+            color: var(--text-accent);
+            font-size: 0.85em;
+            border-top: 1px solid var(--border-color);
         }
 
         .footer a {
-            color: #c586c0; /* Pink/purple for links */
+            color: var(--highlight-blue);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
 
         .footer a:hover {
+            color: var(--text-light);
             text-decoration: underline;
         }
 
         .separator {
-            margin: 0 10px;
-            color: #6a9955; /* Green for separators */
+            margin: 0 12px;
+            color: var(--text-accent);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                min-height: calc(100vh - 50px);
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .section:nth-child(even) {
+                flex-direction: column; /* Ensure column direction on small screens */
+            }
+            .section-image {
+                order: -1; /* Move image above text on small screens for better flow */
+                margin-bottom: 20px;
+            }
+            .section-image img {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -129,7 +233,7 @@
             <div class="section-text">
                 <h2>Unlock Essential Skills</h2>
                 <p>Internboat offers focused courses in key programming areas like <span class="highlight">Python</span>, <span class="highlight">C++</span>, and <span class="highlight">Web Development</span>. Learn the fundamentals and gain practical skills you can actually use.</p>
-                <a href="boat.html" class="button" target="_blank">Explore Courses</a>
+                <a href="boat.html" class="button">Explore Courses</a>
             </div>
             <div class="section-image">
                 <img src="skills.jpg" alt="Skills Illustration">
@@ -143,6 +247,7 @@
             <div class="section-text">
                 <h2>Learn at Your Own Pace</h2>
                 <p>Our courses are designed to be flexible, allowing you to learn at your own speed. Access engaging materials and practical exercises that fit your schedule.</p>
+                <a href="register.html" class="button">Start Learning Today</a>
             </div>
         </section>
 
