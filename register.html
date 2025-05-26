@@ -98,7 +98,7 @@
         </div>
     </footer>
     <script>
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
+        document.getElementById('signupForm').addEventListener('submit', async function(event) { // Added 'async' keyword here
             // ALWAYS prevent default submission if you're doing JS validation first
             event.preventDefault(); // This is critical to stop page reload
 
@@ -107,10 +107,11 @@
 
             const nameError = document.getElementById('name-error');
             const emailError = document.getElementById('email-error');
-            const confirmationMessage = document.getElementById('confirmation-message'); // This existing div will NOT be used for the top message
+            const confirmationMessage = document.getElementById('confirmation-message');
             const errorMessage = document.getElementById('error-message');
             const topSuccessContainer = document.getElementById('top-success-container');
             const alreadyRegisteredText = document.getElementById('already-registered-text'); // Get the 'Already registered?' paragraph
+            const signupForm = document.getElementById('signupForm'); // Get a direct reference to the form
 
             let isValid = true;
 
@@ -119,6 +120,7 @@
             emailError.style.display = "none";
             errorMessage.style.display = "none";
             topSuccessContainer.style.display = "none"; // Ensure it's hidden before validation
+            confirmationMessage.style.display = "none"; // Ensure this hidden too
 
             // Client-side validation logic
             if (nameInput.value.trim() === '') {
@@ -145,46 +147,67 @@
                 emailError.style.display = "none";
             }
 
-            // If client-side validation passes, then proceed with "registration" (simulated)
+            // If client-side validation passes, then proceed with sending data to backend
             if (isValid) {
-                // In a real application, you would send data to the server here using Fetch API.
-                // Upon successful response from the server, you would then execute the following:
+                try {
+                    // *** THIS IS THE UPDATED LINE ***
+                    const response = await fetch('https://internboat-backend-api.onrender.com/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: nameInput.value.trim(),
+                            email: emailInput.value.trim()
+                        })
+                    });
 
-                // 1. Hide the form
-                signupForm.style.opacity = '0';
-                signupForm.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    signupForm.style.display = 'none';
-                }, 500); // Wait for transition to finish
+                    const data = await response.json(); // Parse the JSON response from your backend
 
-                // 2. Hide the "Already registered?" text
-                if (alreadyRegisteredText) {
-                    alreadyRegisteredText.style.opacity = '0';
-                    alreadyRegisteredText.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        alreadyRegisteredText.style.display = 'none';
-                    }, 500);
+                    if (response.ok) { // Status code 200-299 indicates success
+                        // 1. Hide the form
+                        signupForm.style.opacity = '0';
+                        signupForm.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            signupForm.style.display = 'none';
+                        }, 500); // Wait for transition to finish
+
+                        // 2. Hide the "Already registered?" text
+                        if (alreadyRegisteredText) {
+                            alreadyRegisteredText.style.opacity = '0';
+                            alreadyRegisteredText.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                alreadyRegisteredText.style.display = 'none';
+                            }, 500);
+                        }
+
+                        // Also hide the general terms/privacy policy text after successful submission
+                        document.querySelector('.mt-8 p').style.opacity = '0';
+                        document.querySelector('.mt-8 p').style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            document.querySelector('.mt-8 p').style.display = 'none';
+                        }, 500);
+
+
+                        // 3. Display the success message at the top
+                        topSuccessContainer.textContent = data.message + " Now you can log in."; // Use message from backend
+                        topSuccessContainer.innerHTML = `Registration Successful! Now you can <a href="login.html">log in</a>.`; // Hardcode for consistent msg
+                        topSuccessContainer.style.display = 'block';
+
+                    } else {
+                        // Handle server-side errors (e.g., email already registered - status 409)
+                        errorMessage.textContent = data.message || "Registration failed. Please try again.";
+                        errorMessage.style.display = "block";
+                    }
+                } catch (error) {
+                    console.error('Error during registration:', error);
+                    errorMessage.textContent = "An error occurred. Please try again.";
+                    errorMessage.style.display = "block";
                 }
-
-                // 3. Display the success message at the top
-                topSuccessContainer.style.display = 'block';
-                // You might add a fade-in effect here if desired, e.g.:
-                // topSuccessContainer.style.opacity = '0';
-                // setTimeout(() => { topSuccessContainer.style.opacity = '1'; }, 10);
-
-                // Ensure the "Log in" link inside the message points to login.html
-                const loginLinkInMessage = topSuccessContainer.querySelector('a');
-                if (loginLinkInMessage) {
-                    loginLinkInMessage.href = 'login.html';
-                }
-
-                // No further action needed as the page should not change.
-                // The user will click the login link to navigate.
             } else {
                 // Display client-side errors
                 errorMessage.textContent = "Please fix the errors in the form.";
                 errorMessage.style.display = "block";
-                confirmationMessage.style.display = "none"; // Keep this hidden
             }
         });
 

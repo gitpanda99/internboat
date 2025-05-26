@@ -166,6 +166,26 @@
             text-align: center;
         }
 
+        /* Added style for the new login link section */
+        .login-link-section {
+            margin-top: 40px; /* Spacing from the last section */
+            margin-bottom: 20px; /* Spacing before the footer */
+            text-align: center;
+            font-size: 1.1em; /* Slightly larger text */
+        }
+
+        .login-link-section a {
+            color: var(--highlight-blue);
+            font-weight: 600;
+            text-decoration: none;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .login-link-section a:hover {
+            text-decoration: underline;
+        }
+
+
         /* Footer styles */
         .footer {
             margin-top: auto; /* Push footer to the bottom */
@@ -250,6 +270,10 @@
                 <a href="register.html" class="button">Start Learning Today</a>
             </div>
         </section>
+
+        <div class="login-link-section">
+            <p>Already registered? <a href="login.html">Log in here!</a></p>
+        </div>
 
         <footer class="footer">
             <a href="terms.html">Terms & Conditions</a>
