@@ -3,178 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internboat - Launch Your Tech Career</title>
+    <title>Internboat - Our Courses</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #1a1a2e; /* Deep Space Blue */
+            --bg-medium: #16213e; /* Darker Blue */
+            --card-bg: #222a40; /* Even darker for cards */
+            --text-light: #e0e0e0; /* Off-white */
+            --text-muted: #94a3b8; /* Slate gray */
+            --highlight-blue: #007bff; /* Standard Blue */
+            --highlight-green: #28a745; /* Standard Green */
+            --gradient-start: #007bff; /* Blue */
+            --gradient-end: #6f42c1; /* Purple */
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+            --shadow-strong: rgba(0, 0, 0, 0.4);
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 960px;
-            margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: var(--bg-medium);
+            box-shadow: 0 10px 30px var(--shadow-strong);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 40px);
+        }
+
         header {
             text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
         }
+
         header h1 {
-            color: #007bff;
-            margin-bottom: 5px;
+            color: var(--highlight-blue);
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            font-weight: 700;
+            letter-spacing: -1px;
         }
+
         header p {
-            color: #666;
+            color: var(--text-muted);
             font-size: 1.1em;
+            font-weight: 300;
         }
+
         .courses {
-            margin-top: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+            flex-grow: 1; /* Allow courses section to grow */
         }
+
         .course-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; /* Rounded corners for cards */
+            padding: 25px;
             text-align: center;
-            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 15px var(--shadow-light); /* Initial shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
         }
+
+        .course-card:hover {
+            transform: translateY(-15px) scale(1.05); /* Floating and slightly larger */
+            box-shadow: 0 20px 40px var(--shadow-medium); /* Stronger shadow on hover */
+            z-index: 1; /* Ensure it floats above others visually */
+        }
+
         .course-card h3 {
-            color: #333;
+            color: var(--text-light);
             margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+            font-weight: 600;
+            letter-spacing: -0.2px;
         }
+
         .course-card p {
-            color: #555;
-            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            flex-grow: 1; /* Allow paragraph to take available space */
         }
+
         .course-price {
-            background-color: #28a745;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 1em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .course-card .button {
-            display: inline-block;
-            background-color: #007bff;
+            background: linear-gradient(90deg, var(--highlight-green), #34d399); /* Green gradient */
             color: white;
             padding: 10px 20px;
+            border-radius: 25px; /* Pill shape */
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 12px 28px;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 30px; /* Pill shape */
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px var(--shadow-medium);
+            border: none;
+            cursor: pointer;
         }
-        .course-card .button:hover {
-            background-color: #0056b3;
+
+        .button:hover {
+            background: linear-gradient(45deg, var(--gradient-end), var(--gradient-start));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-strong);
         }
+
         .cta {
             text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9ecef;
-            border-radius: 8px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow-light);
         }
+
         .cta h2 {
-            color: #333;
-        }
-        .cta p {
-            color: #666;
+            color: var(--text-light);
             margin-bottom: 15px;
         }
-        .cta .button {
-            display: inline-block;
-            background-color: #28a745;
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+
+        .cta p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
         }
-        .cta .button:hover {
-            background-color: #1e7e34;
-        }
+
         footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 10px;
-            color: #777;
-            font-size: 0.9em;
+            margin-top: auto; /* Push footer to the bottom */
+            padding: 25px 0 15px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                min-height: calc(100vh - 50px);
+            }
+            header h1 {
+                font-size: 2.2em;
+            }
+            .courses {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+            .course-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🚀 Internboat</h1>
-            <p>Unlock Your Potential with Our Programming Courses</p>
+            <h1>🚀 Internboat Courses</h1>
+            <p>Unlock Your Potential with Our Cutting-Edge Programming Courses</p>
         </header>
 
         <section class="courses">
             <div class="course-card">
                 <h3>🐍 Python for Beginners</h3>
                 <p>Dive into the world of Python, a versatile language perfect for beginners and experts alike. Learn fundamental concepts and build exciting projects.</p>
-                <div class="course-price">₹ 5,000</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 2,000</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
 
             <div class="course-card">
-                <h3>👾C++ Fundamentals</h3>
+                <h3>👾 C++ Fundamentals</h3>
                 <p>Master the power and efficiency of C++. This course covers core concepts, object-oriented programming, and prepares you for advanced development.</p>
-                <div class="course-price">₹ 7,000</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 3,500</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
 
             <div class="course-card">
                 <h3>🌐 Web Development Bootcamp</h3>
                 <p>Become a full-stack web developer! Learn HTML, CSS, JavaScript, and popular frameworks to build interactive and responsive websites.</p>
-                <div class="course-price">₹ 8,000</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 5,000</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
 
             <div class="course-card">
                 <h3>📊 Data Science with Python</h3>
                 <p>Harness the power of Python for data analysis, visualization, and machine learning. Learn essential libraries like NumPy, Pandas, and Matplotlib.</p>
-                <div class="course-price">₹ 7,500</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 4,200</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
 
             <div class="course-card">
                 <h3>📱 Mobile App Development</h3>
                 <p>Build cross-platform mobile applications using cutting-edge frameworks. Learn to create engaging user experiences for iOS and Android.</p>
-                <div class="course-price">₹ 8,000</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 4,800</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
 
             <div class="course-card">
                 <h3>⚙️ Advanced C++ Concepts</h3>
                 <p>Take your C++ skills to the next level. Explore topics like templates, STL, concurrency, and design patterns for robust software development.</p>
-                <div class="course-price">₹ 7,800</div>
-                <a href="register.html" class="button" target="_blank">Register</a>
+                <div class="course-price">₹ 4,000</div>
+                <a href="register.html" class="button">Register Now</a>
             </div>
-            </section>
+        </section>
 
         <section class="cta">
-            <h2>Ready to Start Your Learning Journey?</h2>
-            <p>Join Internboat today and gain the in-demand programming skills to launch your tech career. Our expert instructors and hands-on projects will guide you every step of the way.</p>
-            <a href="register.html" class="button" target="_blank">Enroll Now!</a>
+            <h2>Ready to Launch Your Career?</h2>
+            <p>Join Internboat today and gain the in-demand programming skills to thrive in the tech industry. Our expert instructors and hands-on projects will guide you every step of the way.</p>
+            <a href="register.html" class="button">Enroll Now!</a>
         </section>
     </div>
 
     <footer>
         <p>&copy; 2025 Internboat. All rights reserved.</p>
+        <p>Meerut, Uttar Pradesh, India</p>
     </footer>
 </body>
 </html>
