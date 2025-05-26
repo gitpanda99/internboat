@@ -13,11 +13,11 @@
             padding: 0;
         }
 
-        /* Ensure HTML and Body take full viewport dimensions */
+        /* Ensure HTML and Body take full viewport dimensions and prevent horizontal scroll */
         html, body {
-            width: 100%; /* Changed from 100vw for better cross-browser compatibility and scrollbar handling */
-            height: 100%; /* Ensure full height */
-            overflow-x: hidden; /* Still good for preventing horizontal scroll */
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
         :root {
@@ -42,9 +42,8 @@
             color: var(--text-light);
             display: flex;
             justify-content: center; /* This centers the container horizontally */
-            align-items: flex-start; /* Align content to the top */
+            align-items: flex-start; /* Align content to the top within the flex container */
             min-height: 100vh; /* Ensure body is at least viewport height */
-            /* Removed explicit width: 100vw; here as html, body { width: 100%; } handles it */
         }
 
         .container {
@@ -55,8 +54,8 @@
             background-color: var(--bg-medium);
             box-shadow: 0 10px 30px var(--shadow-strong);
             border-radius: 15px;
-            display: flex;
-            flex-direction: column;
+            display: flex; /* Make container a flex container itself */
+            flex-direction: column; /* Stack children vertically */
             min-height: calc(100vh - 40px); /* Adjust based on container padding */
         }
 
@@ -83,10 +82,10 @@
 
         .courses {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Desktop grid columns */
             gap: 25px;
             margin-top: 20px;
-            flex-grow: 1; /* Allow courses section to grow */
+            flex-grow: 1; /* Allow courses section to take available space */
         }
 
         .course-card {
@@ -177,33 +176,35 @@
 
         footer {
             text-align: center;
-            margin-top: auto; /* Push footer to the bottom */
+            margin-top: auto; /* Push footer to the bottom within the flex column container */
             padding: 25px 0 15px;
             color: var(--text-muted);
             font-size: 0.85em;
             border-top: 1px solid var(--border-color);
         }
 
-        /* Responsive adjustments */
+        /* Responsive adjustments for mobile */
         @media (max-width: 768px) {
             .container {
-                /* New calculated width: 100% of parent minus total horizontal padding */
-                width: calc(100% - 40px); /* 20px left + 20px right padding = 40px */
-                max-width: none; /* Remove max-width constraint for mobile */
-                margin: 0 auto; /* Explicitly center for mobile */
+                /* Explicitly set width to viewport width, minus some safe margin */
+                width: calc(100vw - 40px); /* 100vw minus 20px on each side */
+                max-width: none; /* Ensure no desktop max-width interferes */
+                margin: 0 auto; /* Ensure centering for this fixed width */
                 padding: 20px; /* Consistent padding for mobile */
-                min-height: 100vh; /* Stretch to full height on mobile */
-                border-radius: 0; /* Optional: Make container full width and height on mobile for seamless look */
-                box-shadow: none; /* Optional: Remove box shadow on mobile for a cleaner look */
+                min-height: 100vh; /* Ensure container is at least viewport height */
+                border-radius: 0; /* Optional: Seamless look on mobile */
+                box-shadow: none; /* Optional: Cleaner look on mobile */
             }
             header h1 {
-                font-size: 2.2em;
+                font-size: 2em; /* Slightly smaller header on mobile */
             }
             .courses {
-                grid-template-columns: 1fr; /* Single column on small screens */
+                /* CRITICAL FIX: Allow cards to shrink fully on mobile */
+                grid-template-columns: 1fr; /* Force single column on small screens */
+                gap: 15px; /* Reduce gap on mobile for better spacing */
             }
             .course-card {
-                padding: 20px;
+                padding: 15px; /* Reduce card padding on mobile */
             }
         }
     </style>
@@ -264,11 +265,11 @@
             <p>Join Internboat today and gain the in-demand programming skills to thrive in the tech industry. Our expert instructors and hands-on projects will guide you every step of the way.</p>
             <a href="register.html" class="button">Enroll Now!</a>
         </section>
-    </div>
 
-    <footer>
-        <p>&copy; 2025 Internboat. All rights reserved.</p>
-        <p>Meerut, Uttar Pradesh, India</p>
-    </footer>
+        <footer>
+            <p>&copy; 2025 Internboat. All rights reserved.</p>
+            <p>Meerut, Uttar Pradesh, India</p>
+        </footer>
+    </div>
 </body>
 </html>
