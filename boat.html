@@ -6,6 +6,11 @@
     <title>Internboat - Our Courses</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Universal Box-Sizing for consistent sizing across all elements */
+        * {
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-dark: #1a1a2e; /* Deep Space Blue */
             --bg-medium: #16213e; /* Darker Blue */
@@ -24,33 +29,34 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 20px;
+            margin: 0; /* Remove default body margin */
+            /* REMOVED: padding: 20px; from body. Container will handle spacing. */
             background-color: var(--bg-dark);
             color: var(--text-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; /* Keep flex for centering */
+            justify-content: center; /* Keep for horizontal centering */
+            align-items: flex-start; /* Changed to flex-start to allow content to align top if container is very tall */
             min-height: 100vh;
-            box-sizing: border-box;
             overflow-x: hidden; /* Prevent horizontal scroll */
+            width: 100vw; /* Ensure body takes full viewport width */
         }
 
         html {
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden; /* Prevent horizontal scroll on html */
+            width: 100vw; /* Ensure html also takes full viewport width */
         }
 
         .container {
             max-width: 1000px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 40px;
+            width: 100%; /* Ensure it takes 100% of its parent's available width */
+            margin: 0 auto; /* Centers the container within the body's full width */
+            padding: 40px; /* Internal padding for the container */
             background-color: var(--bg-medium);
             box-shadow: 0 10px 30px var(--shadow-strong);
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 40px);
+            min-height: calc(100vh - 40px); /* Adjust based on new container padding */
         }
 
         header {
@@ -179,9 +185,14 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            body {
+                padding: 0; /* Remove body padding on mobile to give container full width */
+            }
             .container {
-                padding: 25px;
-                min-height: calc(100vh - 50px);
+                padding: 20px; /* Adjusted padding for mobile to be less but still provide spacing */
+                min-height: 100vh; /* Changed to 100vh, removing calc as body padding is gone */
+                border-radius: 0; /* Optional: Make container full width and height on mobile for seamless look */
+                box-shadow: none; /* Optional: Remove box shadow on mobile for a cleaner look */
             }
             header h1 {
                 font-size: 2.2em;
