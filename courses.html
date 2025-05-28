@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internboat - Our Courses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px; /* Space above footer */
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c5282; /* Darker blue for heading */
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        .course-card {
+            background-color: #ebf8ff; /* Lighter blue for cards */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+            border: 2px solid transparent; /* For selected state */
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.12);
+        }
+        .course-card.selected {
+            border-color: #4c51bf; /* Indigo border for selected */
+            box-shadow: 0 6px 15px rgba(76, 81, 191, 0.3); /* Stronger shadow for selected */
+        }
+        .course-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+        .course-card p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 700;
+        }
+        .course-card p span {
+            color: #2f855a; /* Green for price */
+        }
+
+        .action-area {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 30px;
+            background-color: #f7fafc; /* Lighter background for action area */
+            border-radius: 8px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .action-area.hidden {
+            display: none;
+        }
+        .course-image-display {
+            width: 192px; /* 4x4 rem, assuming 1rem=16px, so 12rem */
+            height: 192px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0 auto 25px auto;
+            border: 2px solid #a0aec0; /* Gray border */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        .pay-button {
+            background: linear-gradient(90deg, #4c51bf, #6f42c1); /* Indigo to Purple */
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(76, 81, 191, 0.3);
+        }
+        .pay-button:hover {
+            background: linear-gradient(90deg, #6f42c1, #4c51bf);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(76, 81, 191, 0.4);
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #2d3748; /* Dark gray for footer */
+            color: #e2e8f0;
+            padding: 20px 0;
+            text-align: center;
+            width: 100%;
+            border-radius: 10px;
+        }
+        .footer a {
+            color: #63b3ed; /* Light blue for links */
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .footer .separator {
+            margin: 0 10px;
+            color: #718096;
+        }
+
+        /* Error Message */
+        #error-message {
+            display: none;
+            background-color: #fef2f2; /* Red-50 */
+            color: #ef4444; /* Red-500 */
+            border: 1px solid #fca5a5; /* Red-300 */
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Courses</h1>
+        <div id="error-message"></div>
+        <div id="courses-list" class="course-grid">
+            <p>Loading courses...</p>
+        </div>
+
+        <div id="action-area" class="action-area hidden">
+            <img id="selected-course-image" src="" alt="Course Image" class="course-image-display">
+            <button id="pay-button" class="pay-button">Pay </button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <a href="terms.html">Terms & Conditions</a>
+        <span class="separator">|</span>
+        <a href="privacy.html">Privacy Policy</a>
+        <span class="separator">|</span>
+        <a href="contact.html">Contact Us</a>
+        <p>&copy; 2025 Internboat. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const backendBaseUrl = 'https://internboat-backend-api.onrender.com'; // Your backend URL
+        const coursesListDiv = document.getElementById('courses-list');
+        const actionArea = document.getElementById('action-area');
+        const selectedCourseImage = document.getElementById('selected-course-image');
+        const payButton = document.getElementById('pay-button');
+        const errorMessageDiv = document.getElementById('error-message');
+
+        let coursesData = []; // To store fetched course data
+
+        async function fetchCourses() {
+            try {
+                const response = await fetch(`${backendBaseUrl}/courses`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                coursesData = await response.json();
+                displayCourses(coursesData);
+            } catch (error) {
+                console.error('Failed to fetch courses:', error);
+                errorMessageDiv.textContent = 'Failed to load courses. Please try again.';
+                errorMessageDiv.style.display = 'block';
+                coursesListDiv.innerHTML = '<p class="text-red-500">Could not load courses.</p>';
+            }
+        }
+
+        function displayCourses(courses) {
+            coursesListDiv.innerHTML = ''; // Clear loading message
+            courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.dataset.id = course.id; // Store ID for selection
+                card.innerHTML = `
+                    <h2>${course.name}</h2>
+                    <p>Price: <span>₹${course.price}</span></p>
+                `;
+                card.addEventListener('click', () => selectCourse(course));
+                coursesListDiv.appendChild(card);
+            });
+        }
+
+        function selectCourse(course) {
+            // Remove 'selected' class from all cards
+            document.querySelectorAll('.course-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Add 'selected' class to the clicked card
+            const selectedCard = document.querySelector(`.course-card[data-id="${course.id}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+
+            // Display image and update pay button
+            selectedCourseImage.src = `images/${course.image}`; // Assuming images/ is a folder in your frontend
+            selectedCourseImage.alt = course.name;
+            payButton.textContent = `Pay ₹${course.price}`;
+            actionArea.classList.remove('hidden'); // Show the action area
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', fetchCourses);
+
+        // Placeholder for pay button click (you'd add actual payment logic here)
+        payButton.addEventListener('click', () => {
+            const selectedId = document.querySelector('.course-card.selected')?.dataset.id;
+            const selectedCourse = coursesData.find(c => c.id === selectedId);
+            if (selectedCourse) {
+                alert(`You are about to pay ₹${selectedCourse.price} for ${selectedCourse.name}. (Payment gateway integration goes here!)`);
+                // In a real app, you'd redirect to a payment gateway or initiate a payment process
+            } else {
+                alert('Please select a course first!');
+            }
+        });
+
+        // Basic email validation function (copied from other pages for consistency)
+        function isValidEmail(email) {
+            const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            return emailRegex.test(email);
+        }
+    </script>
+</body>
+</html>
