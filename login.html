@@ -212,18 +212,22 @@
 
             // Fetch registrations
             try {
-                const response = await fetch('https://internboat.onrender.com/view-registrations');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const registrations = await response.json();
+                // *** THIS IS THE CRITICAL LINE FOR LOGIN.HTML ***
+                const response = await fetch('https://internboat-backend-api.onrender.com/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: enteredName,
+                        email: enteredEmail
+                    })
+                });
 
-                // Check if the entered name and email match any registration
-                const userFound = registrations.some(reg => 
-                    reg.name === enteredName && reg.email === enteredEmail
-                );
+                const data = await response.json(); // Parse the JSON response from your backend
 
-                if (userFound) {
+                // Check if the backend responded with success (status 200 and custom 'success' field)
+                if (response.ok && data.status === 'success') {
                     loginMessage.textContent = 'Login successful! Redirecting...';
                     loginMessage.classList.add('success');
                     loginMessage.style.display = 'block';
@@ -242,12 +246,13 @@
                         window.location.href = 'dashboard.html'; // Replace with your actual dashboard page
                     }, 2000); // 2-second delay
                 } else {
-                    loginMessage.textContent = 'Invalid name or email. Please try again.';
+                    // Handle login failure (e.g., invalid credentials)
+                    loginMessage.textContent = data.message || 'Login failed. Invalid name or email.';
                     loginMessage.classList.add('error');
                     loginMessage.style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error fetching registrations:', error);
+                console.error('Error during login:', error);
                 loginMessage.textContent = 'An error occurred. Please try again later.';
                 loginMessage.classList.add('error');
                 loginMessage.style.display = 'block';
